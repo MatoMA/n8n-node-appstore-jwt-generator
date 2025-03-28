@@ -43,21 +43,28 @@ export class AppStoreJWTNode implements INodeType {
 		let audience = credentials.audience as string;
 		let apiKey = credentials.apiKey as string;
 		let issuerId = credentials.issuerId as string;
-		let privateKey = credentials.privateKey;
-	
-	
+		let privateKey = credentials.privateKey as string;
+		// Ensure proper line breaks in the private key
+		privateKey = privateKey.replace(/(-----BEGIN PRIVATE KEY-----)([\s\S]*?)(-----END PRIVATE KEY-----)/g,
+    (match, begin, content, end) => {
+        return begin + content.replace(/\s+/g, '\n') + end;
+    });
+		// Convert to Buffer for more reliable handling
+		const privateKeyBuffer = Buffer.from(privateKey);
+
+
 		for (let itemIndex = 0; itemIndex < items.length; itemIndex++) {
 			try {
 				const tokenExpiresInSeconds = 1200
 				const NOW = Math.round((new Date()).getTime() / 1000);
-		
+
 				const PAYLOAD = {
 						'iss': issuerId,
 						'iat': NOW,
 						'exp': NOW + tokenExpiresInSeconds,
 						'aud': audience
 				};
-		
+
 				const SIGN_OPTS = {
 						'algorithm': 'ES256',
 						'header': {
@@ -66,13 +73,13 @@ export class AppStoreJWTNode implements INodeType {
 								'typ': 'JWT'
 						}
 				};
-		
+
 				const bearerToken = jwt.sign(
 						PAYLOAD,
-						privateKey,
+						privateKeyBuffer,
 						SIGN_OPTS
 				);
-				
+
 				returnData.push({
 					json: {
 						token: bearerToken,

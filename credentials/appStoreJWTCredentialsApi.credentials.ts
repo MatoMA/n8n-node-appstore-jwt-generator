@@ -8,7 +8,7 @@ export class appStoreJWTCredentialsApi implements ICredentialType {
 	// eslint-disable-next-line n8n-nodes-base/cred-class-field-name-unsuffixed
 	name = 'appStoreJWTSecret';
 	// eslint-disable-next-line n8n-nodes-base/cred-class-field-display-name-missing-api
-	displayName = 'AppStore JWT Credential Api';
+	displayName = 'AppStore JWT Credential API';
 	properties: INodeProperties[] = [
 		// The credentials to get from user and save encrypted.
 		// Properties can be defined exactly in the same way
@@ -17,10 +17,7 @@ export class appStoreJWTCredentialsApi implements ICredentialType {
 			displayName: 'audience',
 			name: 'audience',
 			type: 'string',
-			typeOptions: {
-				password: true,
-			},
-			default: '',
+			default: 'appstoreconnect-v1',
 		},
 		{
 			displayName: 'issuerId',
@@ -44,9 +41,6 @@ export class appStoreJWTCredentialsApi implements ICredentialType {
 			displayName: 'Private Key',
 			name: 'privateKey',
 			type: 'string',
-			typeOptions: {
-				password: true,
-			},
 			default: '',
 		}
 	];
